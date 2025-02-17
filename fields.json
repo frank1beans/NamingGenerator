@@ -1,0 +1,17 @@
+{
+  "fields": [
+    { "name": "Date",  "locked": false },
+    { "name": "Delivery",  "locked": false },
+    { "name": "Project",  "locked": true },
+    { "name": "Organisation",  "locked": false },
+    { "name": "Phase",  "locked": true, "source": "phase" },
+    { "name": "Location",  "locked": false },
+    { "name": "Type",  "locked": true, "source": "type" },
+    { "name": "Role",  "locked": false, "source": "role" },
+    { "name": "Classification",  "locked": false },
+    { "name": "Number",  "locked": false },
+    { "name": "Suitability",  "locked": false },
+    { "name": "Revision", "locked": true },
+    { "name": "Description", "locked": false }
+  ]
+}

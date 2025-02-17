@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gestione Campi - Stile Hydea</title>
+  <!-- Font Awesome per le icone del lucchetto -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    integrity="sha512-dEmE+..."
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <!-- Google Fonts: Roboto -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <style>
+    /* --- Stili Generali --- */
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+    }
+    
+    /* --- Barra in alto (header) --- */
+    header {
+      background-color: #fff;
+      padding: 10px 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    header img {
+      height: 60px;
+    }
+    
+    header h1 {
+      color: #0074d9;
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    
+    /* --- Contenitore globale dei campi --- */
+    #fields-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: nowrap;
+      margin: 20px;
+      transition: all 0.5s ease;
+    }
+    
+    /* --- Stile base di ogni campo --- */
+    .field {
+      position: relative;
+      background-color: #fff;
+      padding: 10px;
+      text-align: center;
+      overflow: hidden;
+      transition: width 0.5s ease, min-width 0.5s ease, margin 0.5s ease, opacity 0.5s ease;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .field-label {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      transition: font-size 0.5s ease;
+      font-weight: bold;
+    }
+    
+    /* --- Campi sbloccati --- */
+    .field.unlocked {
+      width: 120px;
+    }
+    .field.unlocked .field-label {
+      font-size: 1rem;
+    }
+    
+    /* --- Campi bloccati --- */
+    .field.locked {
+      width: 160px;
+      border-color: #e74c3c;
+    }
+    .field.locked .field-label {
+      font-size: 1.2rem;
+    }
+    
+    /* --- Stato collapsed per i campi sbloccati --- */
+    .collapsed .field.unlocked {
+      width: 0 !important;
+      margin: 0 !important;
+      opacity: 0 !important;
+    }
+    
+    /* --- Pulsante globale per il collapse --- */
+    #toggle-collapse-btn {
+      font-size: 18px;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin: 20px;
+      background-color: #0074d9;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      outline: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    #toggle-collapse-btn:hover {
+      background-color: #005fa3;
+    }
+    
+    /* --- Pulsante per il lock/unlock --- */
+    .lock-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #666;
+      margin-top: 8px;
+      outline: none;
+    }
+    .lock-btn:hover {
+      color: #333;
+    }
+    
+    /* --- Stile degli input e select --- */
+    .field input[type="text"],
+    .field select {
+      width: 90%;
+      margin-bottom: 8px;
+      box-sizing: border-box;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+      color: #333;
+    }
+    
+    .field input[type="text"]::placeholder {
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header con barra bianca -->
+  <header>
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxQTEhUSExQWFhEXGBwVFRYXGB0YGBcdFiMXGBYSFRYYHSggGBomGxgVITEhJikrLi4uGB8zODMtNygtLisBCgoKDg0OGxAQGy0eHx0tNystLi0rLS0tLS0vLS0rLS0tLS0rLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLf/AABEIAGgBLAMBEQACEQEDEQH/xAAcAAACAwADAQAAAAAAAAAAAAAABgMEBQECBwj/xABQEAACAQMBBAIJDwoFAgcAAAABAgMABBESBQYhMRNBFDI1UWFxdIHRBxUWIiMzNFJUc5GTsbKzF0JTVXKCkqGkwUNElMLSo9MkJWJjg+Hw/8QAGgEBAAMBAQEAAAAAAAAAAAAAAAIDBAEFBv/EADURAAIBAgEKBAUEAwEBAAAAAAABAgMRMQQSEyEyUXGBobEUM0FSQmFykcEiNFPR4fDxI2L/2gAMAwEAAhEDEQA/AOvq1d0E8nT70tevkHlczDlG1yEOtxQFAFAFAFAFAFAdJu1bxH+9EdWJ9TbI94i+bT7BXzc9p8T044Crt7ZUNztWGOeNZIxaSsFYcAwkhAYYPPBIrTTqShRbi7O67MrklKdnuL/sA2d8ji+g+mo+Kq+5ndHDcVNzdnxwXu0IYUCRKYCqDkNUZLEDwmu1pynTg5O719zkElJpfI0t/j/5befMSfdNV5N5seJKeyyna7h7OKKTaRZKgngevBPXU3lVW+0zmijuMbe7c+yiW2MdtGpe7gjfAPtldwGQ8eRHA1bQr1ZZ15PUmyFSEVay9UaO0N1ltMXWzolSePt4V4LcxnGqE9QcYyh6m4HgTVcK7qfpqu9/Xc9/9k83NwGTY+047mFJ4jmNxkdRBGQysOpgQQR1EVnlFweayad0aFcOilvBdvczHZ9uxXADXky84o24iBD1TSDgPirlueKvpxUI6SXJb3v4Ii3d2Jl3A2cP8pF9B/uaeKq+5nNHEyd4t29mWsWrsKOSVz0cES9tLI2dKAk8B1kngACeqp061acrZ7S9XuRxwilgS7C9Tq0SIdkwxSzsS7kA6FLceiiBORGvIZ4nmeJrk8sqN/pbS/3H5nFSilrRo+wDZ3yOL6D6a54qr7md0cNx0bcKzHGJHt36ngleIjw4VsHzg1zxVT4tfFJjRx9NRXe9urA5uXN1Y9c+kCeDPDMyqAJIx1uoBHEkEcaZsKuyrS3ej4bmd1xx1mdufurZXMDTywRSu8856Q8dQ6WQKwIOCNOMEdVXV61SEs1NrUuxCEYyV7G57ANnfI4voPpqrxVX3Mlo4bg9gGzvkcX0H008VV9zGjhuD2AbO+RxfQfTTxVX3MaOG4PYBs75HF9B9NPFVfcxo4bjp6mygbPiA4APMAO8BLKAo8AAAplfmvguyOUdhf76kO8tql3fW9nIA0EaPdToc4bPuUCnB+MZTj/0UpSdOnKaxbsu7Oy/U0uZZ9gGzvkcX0H008VV9zGjhuMvaOxLfZ9xaXNtEsSNL2NOF4ArcDEbNk8hKIv4qlGpOtGUZO+q65f4OZii7oe6yloUAUB4Z6tXdBPJ0+9LXr5B5XMw5RtchDrcUBQBQBQBQBQBQEc/at4j/eiOrE+p9ke8RfNp9gr5ue0+J6ccDDn7sxeRS/iQ1ev27+pdmV/HyGis5aK+7/dLaXjtvwzWip5VPn3Kobcixv8A9zbzyeT7pqOTedHiSnss2LH3tP2V+wVU8WSWAv79draeXW336vyfGX0vsVVfTiNFZy4TdqIdnzteICbKZh2Yg5RMcKL5VHVwAkA4kYbiQa0Q/wDWOY9pYfP5f0QwdzQ3j220apFbBZLy44QDOVUcC1zIR/hICCcczgDiarpU73ctSWP9cTre4ubvbGS1iEaksxJeWRu2lkbi8rnvk/QMAcBUak893+3yR1KyLW0r+OCJ5pWCRoCzMeoDifH3gBxJ4Coxi5Oy9TuBgbt2Mk8vrjcqUkZSttC3O3ibiSw5CZ8AseYGF6jV9SSitHHm97/pehFa9ZsbW27bW2kTzRxFs6dbBc4xnGeeMiq6dOc9lNnXJLEoezjZ3yyD6wemp+Gq+1kdJE0dlbZt7gEwTRygcDoYNjPUQDkeeq5wlDaTRJNPAvMARg8R1j7QRUToqbrxi0uZtngYhx2Vaj4qSMRLD4kkOR14lA6qvq/+kFU9cH+HzRCNou3MaZZAqlmICqCSTyAHEk+ACqFuJmH7ONnfLbf6xfTV3hqvtZDPiHs32f8ALbf6xfTTw1X2saSIezfZ/wAtt/rF9NPDVfaxpIlX1NnB2fEwOVLzkEdYMspDDwEcallXmvguyOUtn/d5zucelmvbzqlm6GLvdHa5jDKe8ZOmPnpW/TGMNyu+L19rHY622NVZyZj717L7JtJ4B27odBzydfbRtnwOFNTozzJp/P8A6RlHOVjvu1tMXVrDcdciKzAdTcnXzMGHmrlSGZNx3MRd1c1aiSCgPDPVq7oJ5On3pa9fIPK5mHKNrkIdbigKAKAKAKAKAKAjn7VvEf70R1Yn1Psj3iL5tPsFfNz2nxPTjgYc/dmLyKX8SGr1+3f1Lsyv4+Q0VnLRX3f7pbS8dt+Ga0VPKp8+5VDbkWN/+5t55PJ901HJvOjxJT2WbFj72n7K/YKqeLJLAV/VJiZ7eBEcxu13AqSAZKMW9q4U8Dg4OOur8maUm2rqzIVMFxNHdnbLTq8UyhLyAhLiMHhk8VljzxMTgZB8YPEGq6sFF3jri8P93olF7zbkQMCCAQRgg8jngQR1iqsCRh7ubrRWjSMhdmf2qGQ6jFEuSlrETxWJSSQPDxzgVbVrOpqer8vfxORjYYKrOnme3dpPeT2sqkety3kUSDGRdPltUxPIxIVwvMM2TyArdSgqcZJ7Wa3w+XFlMm21uuemVhLhW2sgO1bMEAjse55jw2/fq+Hky4r8lb2kMfYyfFX6B6KpuydhT3vskge3vYlCTrPFE7KMdLHM6xvFJjGoe2DDOcFQR11fQk5KUHrVr8GtdyE9WtDlWcsFfbvDaWziOZFyh8RRXwfOimr6fkz5dyqW3Hmam8nwS5+Zk+61V0vMjxROey+BW3Ttk7BtToXPY8XUPiL4KlXb0kuP5IwSzVwNbsVPiL/CPRVd2T1B2KnxF/hHopdjUZm9G0exbOeZR7ZEOgAc3b2sa4HfcqKnShpJqO9nJPNVyXdrZgtrWG3640VWPfbmzedix89cqTz5OW9iKzVY1agSCgFTc73Ka9s+qKbpoh1dHdZkAUd4SdKKvrfqjGe9WfFau1iuOptDXVBYFAeGerV3QTydPvS16+QeVzMOUbXIQ63FAUAUAUAUAUAUBHP2reI/3ojqxPqfZHvEXzafYK+bntPienHAw5+7MXkUv4kNXr9u/qXZlfx8horOWiT2VNbX15J2JPNHN0JRoghHuaaWB1ODnPgrTaM6cVnJWvjxKtcW3bEi3l2xPcWk8CbOuw8sToCwiABYEAkiUnGTx4VKlThCak5rU/n/AEHJtWsxztFIRAeYUAjxAAisrxLFgL+/Xa2nl1t9+r8nxl9L7FVX04km8+yZCy3lqB2ZCpAUnAnjPFrVz3iRlSe1bB5E1ClNbE9l9HvLGvVGlsTa0dzCs8edLcCp4MjDg0bj81gQQR36hODg81nU7o0qidE/bs73kx2fCxEKgG+mHDSrcVtIyP8AEccz+anhIq+mtHHSS5L88iDedqR23ugWNNnoihUW9gVVAwFADgKAOQAGBXaDu5t+1kavw8UN1Zy0V9qd1bPye5+23rRDyJcV+St7SGis5YK/qg/Bo/Krb8WOtGT7T4PsVzw5jRWcsFjeDujs39q4/CNaKflT5dyuW3Hn2NbbsJe2nRRlmidVHfJUgDzk1TTaUk3vJS1pi1sPb00NtDC2zrwtHEkZIEWMooUkZlBxkcOFaJ0oyk5Ka1t7/wCiEZNK1nqJ73fVoUaWWwvEjUZZiIsKOtjiUnA8Vcjk6k7Ka6/0HUsrtMbgazForb1e7XNlaDkZDdS4+JbYKhh3jK0P0VfR/TCc/lZc/wDFyEtbsNVUExM3p288N/Zxrq6EHN0RyUXB6C3LeAy5+itNKmpU5N4+nLW+hVKVpIc6zFoq7Z9x2laXH5k6vZyHw8ZoD48rKP3qvh+qlKO7X+H+CD1ST36hqqgmFAeGerV3QTydPvS16+QeVzMOUbXIQ63FAUAUAUAUAUAUBHP2reI/3ojqxPqfZHvEXzafYK+bntPienHAw5+7MXkUv4kNXr9u/qXZlfx8horOWlK42nCh0vLGrfFZ1U+A4JzXVGT1pM42lidPXq3+UQ/WL6a7o57n9jmct6LwNRJCzv12tp5dbffrRk+MvpfYpq+nEaKzlwqbsLi+2mBwHTRHHVloYyTjvk8SeutFTy4cH3K47TGus5YKvqeKBasccWuLgsetj00o1MeZOABk9Qq/KtvkuyK6eB235/yPl0P++u5P8f0s5V9OKGis5aK+1O6tn5Pc/bb1oh5EuK/JW9pDRWcsFf1Qfg0flVt+LHWjJ9p8H2K54cxorOWCxvB3R2b+1cfhGtFPyp8u5XLbjz7DIzADJ4AcST/Mk1nLCj692/yiH6xfTUtHPc/sRzlvF31QtqwNs66VZomYxnADqSeI4AA5Jq/JYSVWLaeJCpJOLHFOQrMWitsD3a/vbnmseiyiPzfuk30yOB+5Wir+mlCO/W+epdCuOtt8hrrOWCBBs030O05eu4cw25zwxaZWJwe904dq2Z+ilTW7W+ePQqtdN7/wNW7W0+ybWC465EVmHebk6+Zgw81ZqkMybjuZODzlco7+WbSWUpj9+i03EXD8+AiRQPCdJX96pZPJKok8HqfPUJq8TZ2berNFHMnaSIsi+JgCP5GqpRzW0/Q6tauWqHTwz1au6CeTp96WvXyDyuZhyja5CHW4oCgCgCgCgCgCgI5+1bxH+9EdWJ9T7I94i+bT7BXzc9p8T044GHP3Zi8il/Ehq9ft39S7Mr+PkNFZy0SbDZME20tomaGKUqbcKZEV9OY8kAsDgHwVpnOUaULNrHDiVRV5ST1/8Od993bRNn3bpa26usLsrLCgKkA4YELkEd8V2hWqSqRTk8d7OyikrpIbbH3tP2V+wVmeLJrAX9+u1tPLrb79X5PjL6X2KqvpxGis5cK+7fw/afzsP4MdX1vLp8H3K4bUhoqgsFf1PPgh8oufxpavyrzOS7IrpbIb8/5Hy6H/AH13J/j+lnKvpxQ0VnLRX2p3Vs/J7n7betEPIlxX5K3tIaKzlgr+qD8Gj8qtvxY60ZPtPg+xXPDmNFZywWN4O6Ozf2rj8I1op+VPl3K5bcefY095Pglz8zJ91qqpeZHiiU9l8DF3Y3as2s7ZmtLcsYIixMKEklFJYkrkknrNW1a01UklJ4v1e8hGKaTaWBqjdeyHHsS2z1e4x/y9rVenqe5/dktHHcvsW9sX628Es7drEjSH90E4HhOMVCEHOSivVkm7IztyLBobKFX99YGWUnn0kxMkmfEzEearK8lKo2sMFwWo5DVFE29e0+xrOeYduqHQO+7e1iGPC5UVGjDPml8/+iTzVcxWaWygsbC1ERuXGjMoYoBEheaZgpBJLFRz5vVubGrKdSV7Ld83qRHXFKKtc0tztkzW0UkczRsWleVRGGCoJTrKAMScBixHHkarrTjOScb4W1/IlBNLWMFVkhW3CPRxTWZ52s7xLk8ejbEsB8XRyKB+zV+UK7U/cr88GQhq1bhqqgmeGerV3QTydPvS16+QeVzMOUbXIQ63FAUAUAUAUAUAUBHP2reI/wB6I6sT6n2R7xF82n2Cvm57T4npxwMOfuzF5FL+JDV6/bv6l2ZX8fIaKzlor7v90tpeO2/DNaKnlU+fcqhtyLG//c288nk+6ajk3nR4kp7LNix97T9lfsFVPFklgL+/Xa2nl1t9+r8nxl9L7FVX04jRWcuFfdv4ftP52H8GOr63l0+D7lcNqQ0VQWCv6nnwQ+UXP40tX5V5nJdkV0tkN+f8j5dD/vruT/H9LOVfTihorOWifvLddDf2s5jmeNYZ0YxRNLpLmEqCEBIyA30VooxzqUo3Sd1i7byueppln2aw/oL3/STf8a54aW9fdDSLc/sUbmeXaMkUaQSxWkcqTyyzJ0TOYiGjhijb2xBYKSxAAAwMk11JUU3dNtWSWvmxt/JDrWcsFXah6Tatmg5wxTzv4A+mFPpJf+Gr4aqMnvaX5K3rkvkbG34y1rOqjLNFIAB1kqwAHhJNVU3aUW96JT2XwFrYG9SRWsET297rSKNG/wDCyniqqCAQvHiK0VKDlKTUlrb9UQjKytZ/Y0PZpF8nvf8ASTf8ah4eXuj90d0i3P7GHvbvALmJIEtrzo3lj6fNtKPckYO6jIySSqrgdTGrqNHMk5OS1J21rEhOecrWf2HPYu1Y7qFZ4tXRtnGoaW9qSrAqeIIIIrJODg814lqakroxN6fdrqytByMhupf2LbBUEd4ytF9FW0P0wnP5WXP/AAclraRn3m1ej2pLLJBcskUCwwmOCSRSZD0kzBlUgHhCv7pqyNO9FJNXbu7tL5L8kM60sGa1tvjC0kcRjuIzI2hGlgkjQsQSE1MoGSAcDrqqWTySbunbc0ySmr+oy1SWCpIOg2srfmXkBQ/O22WUnwmJ3H7laLZ9B/8Ay+j/AMleEuI11nLDwz1au6CeTp96WvXyDyuZhyja5CHW4oCgCgCgCgCgCgI5+1bxH+9EdWJ9T7I94i+bT7BXzc9p8T044GHP3Zi8il/Ehq9ft39S7Mr+PkNFZy0V93+6W0vHbfhmtFTyqfPuVQ25Fjf/ALm3nk8n3TUcm86PElPZZsWPvafsr9gqp4sksBf367W08utvv1fk+MvpfYqq+nEaKzlwr7t/D9p/Ow/gx1fW8unwfcrhtSGiqCwV/U8+CHyi5/Glq/KvM5Lsiulshvz/AJHy6H/fXcn+P6Wcq+nFDRWctCgCgCgKG19qRW0TSytpQecsTwCIo4sxPAAcSa7GLk7I5ghe3CYzCa/kBWa4kZdDc4Y4C0ccHjBDE8uLHvVdlCzbU1gl92/UhB3uxwqgsCgCgCgFb1OfgEfzk/40tX5V5j4Lsiqls/fucbv+7X97c81j02UR+a90m+mSQD/467V/TTjDfrfPDodjrbfIaqzlgu792TSWUpj9+i03EX7cBEigeE6dP71W5PJRqK+D1PnqIzV0a+zb1Zoo5k7SRFkXxMAR/I1XJZsmn6HVrVzC3/QrbLdKCXtJUuQB1qhxMviMTSVbk2ueZ7lb+upGeF9wyROGAYHIIyCOsHkaod0TxPLfVN3OvLu7WW3jVoxCqEl1XiGckYPHkRxr0clymnThaT13M1alKTuhT/JntL9Cn1q+mtXjaO/oU6CQfkz2l+hT61fTTxtHf0GgkH5M9pfoU+tX008bR39BoJB+TPaX6FPrV9NPG0d/QaCQfkz2l+hT61fTTxtHf0GgkH5M9pfoU+tX008bR39BoJB+TPaX6FPrV9NPG0d/QaCR1k9TLaRBHQJxH6VOvz08bS39DqoSue87OiKxRq3bKig9fEAA8eviK8Vu7bNq1IXduwXKX0d1Bb9Ogt3hZelSMgs8bBstzGFPKtFOUHTzJStrvhf0ISundK5J697Q/Vn9VF6K7o6X8nRnM6ft6hupa3HZF3cXEPQ9MYtCdIshxGpUkleHE1Gs45sYxd7X9LYnYJ3batc0N7bJ57K5hjGZJInRBnGSwIAJPAcTUKM1GopP0ZKSurGXBtfaCqF9bOQA+FRdWB3qt0dG/mdGQzp+3qU9pm+umt0ax6JEuYpnc3Eb4WJgzYUDJOOWK7DR01Jqd7prB+px50sVbXvHmspcJYW8t7y7kis+ninaN1YTpHjRGsZUqwzzBrSnTnTinKzV/Rv1Kv1RbaV7/Mt+ve0P1Z/VReimjpfydGM6ft6ljcmylhtQkyaJDJNIUDBtIlkeQLqXgThhyqvKJxlO8dasuiJwTS1ke+tlNJHA1vGJZIrmOYoXCalTVkBm4A8RXaMoxzs7UmrEZpu1vRkfr3tD9Wf1UXoqejpfydGczp+3qHr3tD9Wf1UXopo6X8nRjOn7eoeve0P1Z/VReimjpfydGM6ft6nB2ltOTglnBCfjTXHSAfuRLk/SK5mUVjJvgrdzt5P0sSbO3XPSrc3cxublfe8jRFDnmYYQSAerWSW8IqE6urNgrLq+LJKPq9Zl7Ekv7WN4hYdKOlmcOLmNdQlkdwdJGRwYc6tmqVR52fbVufoiCzo6rX5mj697Q/Vn9VF6K5o6X8nRjOn7eoeve0P1Z/VReimjpfydGM6ft6h697Q/Vn9VF6KaOl/J0Yzp+3qHr3tD9Wf1UXopo6X8nRjOn7eplbuy7QtbdYPW/WQ0jahcxAe6O8gXBGeGrHmqdVUak87Ptye6xGLlFWzeoxbo7La2tI4pDmbBkmI65JSZJDnr9sxGe9is9aanNtYenBFsVZazcqskcEUAj7F7Os4zapZdNDG7iGTsiNMxli0alWGQQpA/drVPRVXnuVm8VZ4lSco6kr8y3c7TvpEZG2XlGBVh2VFxByCOXWDUVTpJ30mHyZzOm1s9TQ3Ltp47KCK4XTNGnRkag3BMqh1DgTpC58OarryhKo3DBk4XUdaN6qyYUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAUAuCOWa6uEFxJGkYj0hNGPbKSSdSk8x36ALtZrZon6d5Y2kSN0kVM4kOkMrKoIIJBwcgjNActHJNdToJ5I0jWLSqaMe3DFidSnvUBbh2S4YE3U7YIJU9Hg44kHCA4PXg0BWnlmnnkiik6GGLSruoDO7sAxRSwIUBSuTgkk4oDi82dcxIXhuHkZePRzBSsmOJQFVBUnkCDwPVQHG1NoNJBbPE7RiaSIahjUFfJK+2BGerlQE77Gm/NvJw3USI2HnXQMjwZoCmu1ZXt7aQnTI1wsUmkcGw7RtgHOAdOe+KAZ6AxN4pHzbokjR9JLoZlxnASRsDUCOajqoDt6yyfLLj/p/9ugNK1iKIqlmcgYLNjUfCdIAz4hQHN1cLGjSOcIgLMe8FySfoFAL+xL6cSqLg+1uVMsSkAdEV4m3yACT0ZU8eOVegLm9M0iQjon6ORpY0DYzjW6jiCOI48R3qAm2NtLpQyOui4jOmVO93nUniUYDIPmPEGgOkFw5vZY9XuYhjYLgcCzSAnOM8QB10Bn7JtpZ1dzdTL7rKgVQmAEdlUDKE8gOugJWlntpYxJJ01vI4iyygSRs2dBJUAMpIwcgEEigGKgFrZ9vLO07G5mQLO8aqujACkAAakJ/nQEsbTQXEUbTNNFNrX24UOjINQIZQAwIDAgjgccaAi2fBLO07G5mQLO8aqujAC4wPbIT19+gO7dNbzQqZmlilcxlZAupTpZldWUDI9oQQQeeaA7XE0088kMUnRRRaRI6qGdmYatCagQoCkEnBOTgUAXOzbiNS8NzI7gZ6OYIyvjjpyqgqTyyDw71AamzL0TRRyqMB1DYPMZ5qfCDwNAV95J2S1mdG0usbMrDqI4gjPCgKm2JJGktYlleMSa9ZTTk6UyB7YEc/BQE3rNJ8suP+n/26A6bTuZVMNrC3uzglpXGdCR6Q0hUYDMSVAHAZbPIUAHYsuMi8n198iMr500AY8GaALaOeaPTKzwSo5Vmj06ZQO1ddQOFIIOOYORQFKW0mFykHZc2lo2kJxHnKFAADoxghjnhQE21DJaws4ndyzIgaXSUi1MFMpCqMgZycnHKgJhseXGoXs+vnqxGV8egJjHgzQF7ZTzGMdOoEoJDaT7VsEgOozkBhg4PLOKAxks3kvLrRNJFgRZ0BDqyrYJ1KeXgoC7FsL26PLPLMUOpFfSFDDOGKooyRnhnlQFNbBJb251s66VhxokZOYcnOkjPLroDRs9kRxuHV5Sw6mmdhx4cVZiDz4cKAp7LuFiuriByFaRxPHk41qVVWCk9swZMEc8EGgNLa+044I2d2AAHAdbE8AqjmxJ4ACgF+5snSzsoSSkgliBIxlGOonGQQSCccRigNQ7FlPA3lxjrwI1PmYJkeMUBBte0SGK1iQaUS4iAHHqJJJJ5knjk8zQDDrHfH00Bg7zxB2tVJIBn4lWKntJDkMpBHLqNATesEP6Sb/USf8qA10GAAP/3n66AXt55HkaO1jTWSRNMurSDGhGELEHGp8DGOIVqAi2yLuaPAtlWRGWSNunB0snEcNIyCMgjPEMaA77YvlmtYJV7V5oDjrB1qCp8IIIPhFAXts7OZis8OFuo+1J5SKeJgkxzU9R/NPEdeQKGw78TXcrgEHoI1dD20bq0uqNh8YZ6uBHEUBb3UYdC/H/Hm6/8A3HoCLb1yskkNshDSmVJGAOdCREOztjtQSABnmW4UAw0AqbIsJHa4ZLiSIdkSjSoQjgRk5ZScnx0BqWWxQsgmklkmkAKqXIwgbGrSqgAE4GTjNAZeyNmGRrlummj/APESDTGwC8NPtsFScnPHjQHeSyMF1buZHmEhaECU6jGSrNrjIACk6MHhxHXQE+z51iu7iJyFMrLNGTw1gqqMFJ4Ehl4jngg0Bp7U2lHBGZJGAUDgM8WPUqjmSTwAFAY2x7prZLS3lUL0kbZYnGlxpYRcRjJBfr/N4UBa3xnVbSVSRqdejRetmfCqqjmSSeqgINu2weazjckDMmSrFTwTPBlII4jqNAWvWGH9JN/qJOr96gIdrziG7gmc4iZHgLHgqsxVkLHkAdJGTwzigNp51C6iwC88kjHjyTjFAVNj7TFwjSKpEesqjH/EUYHSqOYUnOM8wM9dAVrjuhD8xL96KgLW2byOKItKCYiQr+11ABjpLOD+aM8T1CgM8bvW2NcLPEOYaGVlXjxyACUx5sUBNuxdvJE2p+k0SPGsoGBIqnAfhwJ5gkcCVJoDTjt1DM4UB3xqbrbTwGT14BoCegM282JbysXkhRnIwWI48OQJ8FARxbu2ysGWCMMpBBA5EcQw8INAXL2wjlXTKiuvUGAPnGRwPioCtabBt4mDpDGrjk2nJHiJ4jzUBcuLZX06lDaWDrnqYZww8IzQE9AVr2yjlXRKiumc4YZGRyOO/QFH2MWnyeP+GgLEuyIGjWJokMSdqhHBcZAwOrgaAr+xi0+Tx/w0Bo21usahEUKijCqOQA6gKA6x2yh2kCgO+AzdZ05CgnvDJoCxQFP1ui06ejXTr6TGOGvOrXj42rjnv0BcoCvHaIHaQKBIwAZscWC5wCevGaAoybu2rEsYIySSSdI4k8ST4SaAt2Wz4oQRFGiA89KgZ8ZA4+egLdAQQW6pq0qBqYu2Otm4sx8JoCegILe2VNWlQupi7Y62OMsfCcUAS26uVLKCUOpCR2p4jUO8cEigOl7YxyrplRXXnhgD5xnkfCKAq2uwbaNtaQxhxybTkjwgnJHmoC5d2iSrokVXQ81YZHDkcHroCpabBt4m1pCiuOTY4jxE8vNQE9/s2KYASxq4HEahnGeBI81AVPYzafJ4/wCGgL4tU0CPSOjA06SMjA4AYPDGBQGem7NoDkW8fi08PoPD+VAaqrjgOXo5ACgI2t1LiTSNYBUN1gHBKg94kCgJGUEYPEcv/oigMo7s2mc9jx+LTw+gcP5UBpxxBQFUAKBgAcAPAAKA/9k=" alt="Hydea Logo">
+    <h1>Naming Convention - File Name</h1>
+  </header>
+  
+  <!-- Pulsante globale per il collapse/espansione -->
+  <button id="toggle-collapse-btn" onclick="toggleCollapse()">
+    <i class="fas fa-minus"></i>
+  </button>
+  
+  <!-- Contenitore dei campi (popolato dinamicamente) -->
+  <div id="fields-container"></div>
+  
+  <script>
+    // Flag per lo stato del collapse
+    let isCollapsed = false;
+    
+    // Funzioni per il salvataggio/ripristino dello stato dei campi nel localStorage
+    function loadFieldsState() {
+      const storedState = localStorage.getItem('fieldsState');
+      return storedState ? JSON.parse(storedState) : {};
+    }
+    
+    function saveFieldsState(state) {
+      localStorage.setItem('fieldsState', JSON.stringify(state));
+    }
+    
+    // Stato globale dei campi, identificati per nome
+    let fieldsState = loadFieldsState();
+    
+    // Variabili globali per i dati di configurazione e i campi
+    let configData = {};
+    let fieldsData = {};
+    
+    // Carica il file di configurazione (config.json)
+    function loadConfig() {
+      return fetch("config.json")
+        .then(response => response.json())
+        .then(data => {
+          configData = data.mappings;
+        });
+    }
+    
+    // Carica il file dei campi (fields.json)
+    function loadFields() {
+      return fetch("fields.json")
+        .then(response => response.json())
+        .then(data => {
+          fieldsData = data.fields;
+        });
+    }
+    
+    // Funzione per creare dinamicamente i campi dopo aver caricato le configurazioni
+    function createFields() {
+      const container = document.getElementById('fields-container');
+      container.innerHTML = ''; // Pulisce il container
+      
+      fieldsData.forEach((fieldConfig, index) => {
+        const fieldKey = fieldConfig.name || `Campo${index+1}`;
+        
+        // Applica lo stato salvato, se presente
+        if (fieldsState.hasOwnProperty(fieldKey)) {
+          fieldConfig.locked = fieldsState[fieldKey];
+        }
+        
+        // Crea il div per il campo
+        const fieldDiv = document.createElement('div');
+        fieldDiv.classList.add('field');
+        fieldDiv.classList.add(fieldConfig.locked ? 'locked' : 'unlocked');
+        
+        // Etichetta del campo
+        const labelEl = document.createElement('span');
+        labelEl.classList.add('field-label');
+        labelEl.textContent = fieldConfig.name || `Campo ${index+1}`;
+        fieldDiv.appendChild(labelEl);
+        
+        // Se il campo ha "source", creiamo un <select>
+        if (fieldConfig.source) {
+          let selectEl = document.createElement('select');
+          
+          if (configData[fieldConfig.source]) {
+            // Se il source è "role", "type" o "phase", visualizziamo il code
+            if (
+              fieldConfig.source === "role" || 
+              fieldConfig.source === "type"  || 
+              fieldConfig.source === "phase"
+            ) {
+              Object.keys(configData[fieldConfig.source]).forEach(code => {
+                let optionEl = document.createElement('option');
+                optionEl.value = code;
+                optionEl.textContent = code;
+                selectEl.appendChild(optionEl);
+              });
+            } else {
+              // Per gli altri mapping (ad esempio "cde"), visualizziamo la descrizione,
+              // mantenendo il code come valore
+              Object.keys(configData[fieldConfig.source]).forEach(code => {
+                let optionEl = document.createElement('option');
+                optionEl.value = code;
+                optionEl.textContent = configData[fieldConfig.source][code];
+                selectEl.appendChild(optionEl);
+              });
+            }
+          } else {
+            // Fallback se il mapping non esiste
+            let optionEl = document.createElement('option');
+            optionEl.value = "";
+            optionEl.textContent = "Nessun dato disponibile";
+            selectEl.appendChild(optionEl);
+          }
+          fieldDiv.appendChild(selectEl);
+        } else {
+          // Se non è previsto un menu a tendina, crea un input di testo
+          const inputEl = document.createElement('input');
+          inputEl.type = 'text';
+          inputEl.placeholder = `Valore di ${fieldConfig.name || 'campo'}`;
+          fieldDiv.appendChild(inputEl);
+        }
+        
+        // Pulsante per lock/unlock
+        const lockBtn = document.createElement('button');
+        lockBtn.classList.add('lock-btn');
+        lockBtn.innerHTML = fieldConfig.locked
+          ? '<i class="fas fa-lock"></i>'
+          : '<i class="fas fa-lock-open"></i>';
+        lockBtn.addEventListener('click', () => toggleLock(lockBtn, fieldKey));
+        fieldDiv.appendChild(lockBtn);
+        
+        container.appendChild(fieldDiv);
+      });
+    }
+    
+    // Carica le configurazioni e i campi, poi crea l'interfaccia
+    Promise.all([loadConfig(), loadFields()]).then(createFields);
+    
+    // Funzione per il collapse/espansione globale dei campi sbloccati
+    function toggleCollapse() {
+      const container = document.getElementById('fields-container');
+      const btn = document.getElementById('toggle-collapse-btn');
+      
+      if (!isCollapsed) {
+        container.classList.add('collapsed');
+        btn.innerHTML = '<i class="fas fa-plus"></i>';
+      } else {
+        container.classList.remove('collapsed');
+        btn.innerHTML = '<i class="fas fa-minus"></i>';
+      }
+      isCollapsed = !isCollapsed;
+    }
+    
+    // Funzione per il toggle lock/unlock di un singolo campo
+    function toggleLock(lockButton, fieldKey) {
+      const field = lockButton.parentElement;
+      
+      if (field.classList.contains('unlocked')) {
+        field.classList.remove('unlocked');
+        field.classList.add('locked');
+        lockButton.innerHTML = '<i class="fas fa-lock"></i>';
+        fieldsState[fieldKey] = true; // Campo bloccato
+      } else {
+        field.classList.remove('locked');
+        field.classList.add('unlocked');
+        lockButton.innerHTML = '<i class="fas fa-lock-open"></i>';
+        fieldsState[fieldKey] = false; // Campo sbloccato
+      }
+      saveFieldsState(fieldsState);
+    }
+  </script>
+</body>
+</html>
